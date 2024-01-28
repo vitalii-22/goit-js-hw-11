@@ -22,6 +22,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  margin-bottom: 32px;
 }
 
 input {
@@ -82,7 +83,6 @@ button:focus {
 }
 
 .gallery {
-  margin-top: 60px;
   display: flex;
   flex-wrap: wrap;
   width: 1128px;
@@ -124,7 +124,6 @@ button:focus {
 }
 
 .wrap-loader {
-  margin-top: 20px;
   width: 300px;
   gap: 20px;
   display: flex;
