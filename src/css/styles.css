@@ -124,6 +124,7 @@ button:focus {
 }
 
 .wrap-loader {
+  margin-top: 20px;
   width: 300px;
   gap: 20px;
   display: flex;
