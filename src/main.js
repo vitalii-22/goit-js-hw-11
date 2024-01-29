@@ -5,9 +5,12 @@ const form = document.querySelector('.feedback-form');
 const gallery = document.querySelector('.gallery');
 const loader = document.querySelector('.wrap-loader');
 
-// loader.classList.add('.hiden');
-
 let searchBar = '';
+
+let lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 form.addEventListener('submit', event => {
   event.preventDefault();
@@ -18,7 +21,7 @@ form.addEventListener('submit', event => {
 });
 
 function fetchImages() {
-  const Params = new URLSearchParams({
+  const searchParams = new URLSearchParams({
     key: '42046594-dc9dc59be7e95573d854c379a',
     q: `${searchBar}`,
     image_type: 'photo',
@@ -27,7 +30,7 @@ function fetchImages() {
     per_page: 9,
   });
 
-  return fetch(`https://pixabay.com/api/?${Params})`)
+  return fetch(`https://pixabay.com/api/?${searchParams}`)
     .then(response => {
       if (!response.ok) {
         throw new Error(response.status);
@@ -46,18 +49,30 @@ function fetchImages() {
         });
       }
 
-      function createGallery(arr) {
-        return data.hits
-          .map(
-            ({
-              webformatURL,
-              largeImageURL,
-              tags,
-              likes,
-              views,
-              comments,
-              downloads,
-            }) => `<li class="gallery-item">
+      gallery.innerHTML = createGallery(data.hits);
+
+      lightbox.refresh();
+    })
+    .catch(error => {
+      console.log(error);
+    })
+    .finally(() => {
+      loader.classList.add('hiden');
+    });
+}
+
+function createGallery(arr) {
+  return arr
+    .map(
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => `<li class="gallery-item">
            <a class="gallery-link" href="${largeImageURL}">
           <img
             class="gallery-image"
@@ -92,29 +107,6 @@ function fetchImages() {
 
       </li>
       `
-          )
-          .join('');
-      }
-
-      console.log(Params.toString());
-
-      gallery.innerHTML = createGallery(data);
-
-      console.log(data.hits);
-      console.log(data);
-
-      let lightbox = new SimpleLightbox('.gallery a', {
-        captionsData: 'alt',
-        captionDelay: 250,
-      });
-
-      lightbox.refresh();
-    })
-    .catch(error => {
-      // Error handling
-      console.log(error);
-    })
-    .finally(() => {
-      loader.classList.add('hiden');
-    });
+    )
+    .join('');
 }
